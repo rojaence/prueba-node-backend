@@ -16,12 +16,13 @@ export type UserAttributes = {
 }
 
 export type UserCreateDTO = Optional<UserAttributes, "id">
+export type UserPutDTO = Omit<UserAttributes, "id" | "password" | "updatedAt" | "createdAt" | "sessionActive">
 
 export enum UserScopes {
   UserProfile = "userProfile"
 }
 
-class User extends Model<UserAttributes, UserCreateDTO> {
+export class User extends Model<UserAttributes, UserCreateDTO> {
   declare id: number;
   declare username: string;
   declare password: string;
@@ -55,6 +56,7 @@ class User extends Model<UserAttributes, UserCreateDTO> {
       sessionActive: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
+        defaultValue: false
       },
       email: {
         type: DataTypes.STRING,
@@ -67,6 +69,7 @@ class User extends Model<UserAttributes, UserCreateDTO> {
       status: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
+        defaultValue: true
       },
       firstName: {
         type: DataTypes.STRING,
@@ -76,11 +79,11 @@ class User extends Model<UserAttributes, UserCreateDTO> {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      firstLastName: {
+      firstLastname: {
         type: DataTypes.STRING,
         allowNull: false
       },
-      secondLastName: {
+      secondLastname: {
         type: DataTypes.STRING,
         allowNull: false
       },

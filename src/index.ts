@@ -1,10 +1,27 @@
+import { database } from '@database/initDatabase'
+import { seedUsers } from "@database/seeders/userSeeder"
 import { PORT } from '@environment/env'
 import express, { Response, Request, NextFunction } from 'express'
 import { ValidationError } from 'express-validation'
+import authRoutes from "@auth/auth.routes"
 
 const app = express()
 
 app.use(express.json())
+
+async function initDBConn() {
+  try {
+    await database.sequelize.authenticate()
+    await database.sequelize.sync({ alter: true })
+  } catch (err) {
+    console.error('Ocurrió un error al conectarse con la base de datos:', err);
+  }
+}
+
+initDBConn()
+
+const prefix = "/api"
+app.use(`${prefix}/auth`, authRoutes)
 
 app.use(function(err: any, req: Request, res: Response, next: NextFunction) {
 
