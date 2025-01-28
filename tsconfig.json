@@ -112,6 +112,7 @@
       "@environment/*": ["src/environment/*"],
       "@user/*": ["src/modules/user/*"],
       "@auth/*": ["src/modules/auth/*"],
+      "@role/*": ["src/modules/role/*"],
       "@database/*": ["src/database/*"],
       "@exceptions/*": ["src/exceptions/*"],
       "@utils/*": ["src/utils/*"],

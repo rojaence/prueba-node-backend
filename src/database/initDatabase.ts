@@ -21,4 +21,4 @@ class Database {
 }
 
 export const database = Database.getInstance()
-export const { User } = database.models
+export const { User, Role, Permission } = database.models
