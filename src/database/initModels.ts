@@ -27,6 +27,15 @@ export function initModels(sequelize: Sequelize) {
   const Session = _Session.initModel(sequelize)
 
   // Definiendo relacion entre tablas
+  Role.belongsToMany(Permission, { through: RolePermission, foreignKey: 'idRole' })
+  Permission.belongsToMany(Role, { through: RolePermission, foreignKey: 'idPermission' });
+
+  Role.belongsToMany(User, { through: RoleUser, foreignKey: 'idRole' });
+  User.belongsToMany(Role, { through: RoleUser, foreignKey: 'idUser' });
+
+  LoginAttempt.belongsTo(User, { as: 'user', foreignKey: 'idUser' })
+  User.hasMany(LoginAttempt, { as: 'loginAttempts', foreignKey: 'idUser' })
+
 
   return {
     User,

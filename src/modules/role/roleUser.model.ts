@@ -15,7 +15,7 @@ export class RoleUser extends Model<RoleUserAttributes> {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'Role',
+          model: 'role',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -25,25 +25,25 @@ export class RoleUser extends Model<RoleUserAttributes> {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
+          model: 'user',
           key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       }
     }, {
-      tableName: 'RoleUser',
+      tableName: 'roleUser',
       timestamps: false,
-      indexes: [
-        {
-          name: "role_user_unique",
-          unique: true,
-          fields: [
-            { name: "idRole" },
-            { name: "idUser" },
-          ]
-        }
-      ]
+      // indexes: [
+      //   {
+      //     name: "role_user_unique",
+      //     unique: true,
+      //     fields: [
+      //       { name: "idRole" },
+      //       { name: "idUser" },
+      //     ]
+      //   }
+      // ]
     }) as typeof RoleUser;
   }
 }

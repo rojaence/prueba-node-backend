@@ -25,7 +25,7 @@ export class LoginAttempt extends Model<LoginAttemptAttributes> {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
+          model: 'user',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -41,11 +41,11 @@ export class LoginAttempt extends Model<LoginAttemptAttributes> {
         allowNull: false
       }
     }, {
-      tableName: 'LoginAttempt',
+      tableName: 'loginAttempt',
       timestamps: false,
       indexes: [
         {
-          name: "session_pk",
+          name: "login_attempt_pk",
           unique: true,
           fields: [
             { name: "id" }

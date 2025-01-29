@@ -25,7 +25,7 @@ export class Session extends Model<SessionAttributes> {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
+          model: 'user',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -40,7 +40,7 @@ export class Session extends Model<SessionAttributes> {
         allowNull: true
       }
     }, {
-      tableName: 'Session',
+      tableName: 'session',
       timestamps: false,
       indexes: [
         {

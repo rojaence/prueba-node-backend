@@ -1,6 +1,7 @@
 // scripts/seedUsers.ts
-import { User } from '@database/initDatabase';
+import { Role, RoleUser, User } from '@database/initDatabase';
 import { database } from '@database/initDatabase';
+import { RoleEnum } from '@enums/roleEnum';
 import { UserCreateDTO } from '@user/user.model';
 import BcryptHash from "@utils/bcryptHash";
 
@@ -9,8 +10,20 @@ export async function seedUsers() {
     // Conecta con la base de datos
     await database.sequelize.authenticate();
 
+    const adminRole = await Role.findOne({
+      where: {
+        name: RoleEnum.Admin
+      }
+    })
+
+    const userRole = await Role.findOne({
+      where: {
+        name: RoleEnum.User
+      }
+    })
+
     // Crea varios usuarios de ejemplo
-    const users: UserCreateDTO[] = [
+    const adminUsers: UserCreateDTO[] = [
       {
         username: 'johndoe1',
         password: await BcryptHash.genPasswordHash('admin1234'),
@@ -27,12 +40,16 @@ export async function seedUsers() {
     ];
 
     // Inserta los usuarios en la base de datos
-    await User.bulkCreate(users, { validate: true });
+    const adminUsersCreated = await User.bulkCreate(adminUsers, { validate: true });
+    for (let admin of adminUsersCreated) {
+      await RoleUser.create({
+        idRole: adminRole!.id,
+        idUser: admin.id
+      })
+    }
+  
     console.log('Usuarios insertados correctamente.');
   } catch (error) {
     console.error('Error al insertar usuarios:', error);
-  } finally {
-    await database.sequelize.close()
-    console.log('Conexión a la base de datos cerrada.');
   }
-}
+  }

@@ -25,7 +25,7 @@ export class Permission extends Model<PermissionAttributes, PermissionCreateDTO>
         allowNull: false
       }
     }, {
-      tableName: "role",
+      tableName: "permission",
       indexes: [
         {
           name: "permission_pk",

@@ -15,7 +15,7 @@ export class RolePermission extends Model<RolePermissionAttributes> {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'Role', // Nombre de la tabla que contiene los roles
+          model: 'role', // Nombre de la tabla que contiene los roles
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -25,25 +25,25 @@ export class RolePermission extends Model<RolePermissionAttributes> {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'Permission', // Nombre de la tabla que contiene los permisos
+          model: 'permission', // Nombre de la tabla que contiene los permisos
           key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       }
     }, {
-      tableName: 'RolePermission',
+      tableName: 'rolePermission',
       timestamps: false,
-      indexes: [
-        {
-          name: "role_permission_unique",
-          unique: true,
-          fields: [
-            { name: "idRole" },
-            { name: "idPermission" },
-          ]
-        }
-      ]
+      // indexes: [
+      //   {
+      //     name: "role_permission_unique",
+      //     unique: true,
+      //     fields: [
+      //       { name: "idRole" },
+      //       { name: "idPermission" },
+      //     ]
+      //   }
+      // ]
     }) as typeof RolePermission;
   }
 }
