@@ -1,7 +1,7 @@
-import { User } from "@database/initDatabase";
+import { Role, User } from "@database/initDatabase";
 import { CodesHttpEnum } from "@enums/codesHttpEnums";
 import ApiException from "@exceptions/ApiException";
-import { UserCreateDTO, UserPutDTO, UserScopes } from "./user.model";
+import { UserCreateDTO, UserCreateWithRoleDTO, UserPutDTO, UserScopes } from "./user.model";
 
 export default class UserRepository {
   async findByUsername(username: string) {
@@ -24,7 +24,23 @@ export default class UserRepository {
     })
   }
 
-  async createUser(payload: UserCreateDTO) {
+  async findByEmail(email: string) {
+    return User.scope(UserScopes.UserProfile).findOne({
+      where: {
+        email
+      }
+    })
+  }
+
+  async findByIdCard(idCard: string) {
+    return User.scope(UserScopes.UserProfile).findOne({
+      where: {
+        idCard
+      }
+    })
+  }
+
+  async createUser(payload: UserCreateWithRoleDTO) {
     const user = await User.create(payload)
     const createdUser = User.scope(UserScopes.UserProfile).findByPk(user.id)
     return createdUser

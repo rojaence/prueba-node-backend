@@ -1,9 +1,10 @@
 import { database } from '@database/initDatabase'
-import { seedUsers } from "@database/seeders/userSeeder"
 import { PORT } from '@environment/env'
 import express, { Response, Request, NextFunction } from 'express'
 import { ValidationError } from 'express-validation'
+import { jwtMiddleware } from '@middlewares/jwtMiddleware'
 import authRoutes from "@auth/auth.routes"
+import userRoutes from '@user/user.routes'
 
 const app = express()
 
@@ -22,6 +23,7 @@ initDBConn()
 
 const prefix = "/api"
 app.use(`${prefix}/auth`, authRoutes)
+app.use(`${prefix}/users`, jwtMiddleware, userRoutes)
 
 app.use(function(err: any, req: Request, res: Response, next: NextFunction) {
 

@@ -1,3 +1,4 @@
+import { RoleUser } from "@role/roleUser.model"
 import { DataTypes, Model, Optional, Sequelize } from "sequelize"
 
 export type UserAttributes = {
@@ -12,11 +13,16 @@ export type UserAttributes = {
   firstLastname: string,
   secondLastname: string,
   idCard: string,
-  birthDate: Date
+  birthDate: Date,
 }
 
 export type UserCreateDTO = Optional<UserAttributes, "id">
-export type UserPutDTO = Omit<UserAttributes, "id" | "password" | "updatedAt" | "createdAt" | "sessionActive">
+export type UserCreateWithRoleDTO = UserCreateDTO & {
+  idRole: number
+}
+export type UserPutDTO = Omit<UserAttributes, "id" | "password" | "updatedAt" | "createdAt" | "sessionActive"> & {
+  idRole: number
+}
 
 export enum UserScopes {
   UserProfile = "userProfile"
@@ -99,13 +105,6 @@ export class User extends Model<UserAttributes, UserCreateDTO> {
         allowNull: false
       }
     }, {
-      scopes: {
-        [UserScopes.UserProfile]: {
-          attributes: {
-            exclude: ["password"]
-          }
-        }
-      },
       tableName: "user",
       indexes: [
         {

@@ -115,6 +115,7 @@
       "@role/*": ["src/modules/role/*"],
       "@database/*": ["src/database/*"],
       "@exceptions/*": ["src/exceptions/*"],
+      "@middlewares/*": ["src/middlewares/*"],
       "@utils/*": ["src/utils/*"],
       "@enums/*": ["src/enums/*"],
     }

@@ -1,5 +1,5 @@
 import type { Sequelize } from "sequelize";
-import { User as _User, UserAttributes} from "@user/user.model";
+import { User as _User, UserAttributes, UserScopes} from "@user/user.model";
 import { Role as _Role, RoleAttributes } from "@role/role.model"
 import { Permission as _Permission, PermissionAttributes } from "@role/permission.model"
 import { RolePermission as _RolePermisson, RolePermissionAttributes } from "@role/rolePermission.model";
@@ -31,11 +31,23 @@ export function initModels(sequelize: Sequelize) {
   Permission.belongsToMany(Role, { through: RolePermission, foreignKey: 'idPermission' });
 
   Role.belongsToMany(User, { through: RoleUser, foreignKey: 'idRole' });
-  User.belongsToMany(Role, { through: RoleUser, foreignKey: 'idUser' });
+  User.belongsToMany(Role, { through: RoleUser, foreignKey: 'idUser', as: "roles" });
 
   LoginAttempt.belongsTo(User, { as: 'user', foreignKey: 'idUser' })
   User.hasMany(LoginAttempt, { as: 'loginAttempts', foreignKey: 'idUser' })
 
+  // Inicializar scopes
+  User.addScope(UserScopes.UserProfile, {
+    attributes: {
+      exclude: ["password"]
+    },
+    include: {
+      model: Role,
+      attributes: ['id', 'name'],
+      as: "roles",
+      through: { attributes: [] }
+    }
+  })
 
   return {
     User,
