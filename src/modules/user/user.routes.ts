@@ -19,7 +19,7 @@ routes.get('/', async (req: Request, res: Response, next: NextFunction) => {
 })
 
 routes.post('/', 
-  validate(createValidation, {}, {}) as any,
+  validate(createValidation, { keyByField: true }, {}) as any,
   async (req: Request, res: Response, next: NextFunction) => {
   try {
     const response = await CreateController(req)
@@ -32,7 +32,7 @@ routes.post('/',
 })
 
 routes.get('/:id', 
-  validate(idParamValidation, {}, {}) as any,
+  validate(idParamValidation, { keyByField: true }, {}) as any,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const response = await GetByIdController(req)
@@ -46,7 +46,7 @@ routes.get('/:id',
 )
 
 routes.put('/:id',
-  validate(putValidation, {}, {}) as any,
+  validate(putValidation, { keyByField: true }, {}) as any,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const response = await PutController(req)

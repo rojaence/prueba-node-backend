@@ -1,17 +1,17 @@
-import { DataTypes, Model, Sequelize } from "sequelize";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 
 export type LoginAttemptAttributes = {
   id: number;
   idUser: number;
   resolved: boolean;
-  dateAttempt: Date;
 };
 
-export class LoginAttempt extends Model<LoginAttemptAttributes> {
+export type LoginAttemptCreateDTO = Optional<LoginAttemptAttributes, "id" | "resolved">
+
+export class LoginAttempt extends Model<LoginAttemptAttributes, LoginAttemptCreateDTO> {
   declare id: number;
   declare idUser: number;
   declare resolved: boolean;
-  declare createdAt: Date;
 
   static initModel(sequelize: Sequelize): typeof LoginAttempt {
     return sequelize.define('LoginAttempt', {
@@ -36,13 +36,9 @@ export class LoginAttempt extends Model<LoginAttemptAttributes> {
         allowNull: false,
         defaultValue: false
       },
-      dateAttempt: {
-        type: DataTypes.DATE,
-        allowNull: false
-      }
     }, {
       tableName: 'loginAttempt',
-      timestamps: false,
+      timestamps: true,
       indexes: [
         {
           name: "login_attempt_pk",

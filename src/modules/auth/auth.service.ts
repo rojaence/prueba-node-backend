@@ -26,4 +26,17 @@ export class AuthService {
       throw new Error("Error en autenticación")
     }
   }
+
+  async profileService(id: number) {
+    try {
+      const response = await this._userRepository.findById(id)
+      return HttpResponse.response(CodesHttpEnum.ok, response, 'Perfil de usuario')
+    } catch (error) {
+      if (error instanceof ApiException) {
+        return HttpResponse.response(error.statusCode, null, error.message)
+      }
+      console.log(error)
+      throw new Error("Error en autenticación")
+    }
+  }
 }

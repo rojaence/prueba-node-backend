@@ -1,4 +1,4 @@
-import { DataTypes, Model, Sequelize } from "sequelize";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 
 export type SessionAttributes = {
   id: number;
@@ -7,7 +7,9 @@ export type SessionAttributes = {
   endDate: Date;
 };
 
-export class Session extends Model<SessionAttributes> {
+export type SessionCreateDTO = Optional<SessionAttributes, "id" | "endDate">
+
+export class Session extends Model<SessionAttributes, SessionCreateDTO> {
   declare id: number;
   declare idUser: number;
   declare startDate: Date;

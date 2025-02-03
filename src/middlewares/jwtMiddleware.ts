@@ -8,9 +8,14 @@ import { ITokenDecoded } from '@auth/interfaces'
 export const jwtMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization
-    const token = authHeader && authHeader.split(' ')[1]
+    let token = authHeader && authHeader.split(' ')[1]
 
     if (!token) {
+      token = req.cookies['auth-token'];
+    }
+
+    if (!token) {
+      const tokddd = token
       res
         .status(CodesHttpEnum.unauthorized)
         .json(HttpResponse.fail(res, CodesHttpEnum.unauthorized, "Error de auth", "Se requiere autenticación"))
