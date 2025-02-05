@@ -1,9 +1,10 @@
 import { CodesHttpEnum } from "../../enums/codesHttpEnums";
 import ApiException from "../../exceptions/ApiException";
-import { UserCreateDTO }  from "@user/user.model"
+import { UserCreateDTO, UserProfileUpdateDTO, UserScopes }  from "@user/user.model"
 import { HttpResponse } from "../../utils/httpResponse";
 import UserRepository from "@user/user.repository";
 import AuthRepository from "@auth/auth.repository";
+import { User } from "@database/initDatabase";
 
 export class AuthService {
   private readonly _authRepository: AuthRepository
@@ -31,6 +32,38 @@ export class AuthService {
     try {
       const response = await this._userRepository.findById(id)
       return HttpResponse.response(CodesHttpEnum.ok, response, 'Perfil de usuario')
+    } catch (error) {
+      if (error instanceof ApiException) {
+        return HttpResponse.response(error.statusCode, null, error.message)
+      }
+      console.log(error)
+      throw new Error("Error en autenticación")
+    }
+  }
+
+  async updateProfileService(id: number, data: UserProfileUpdateDTO) {
+    try {
+      const existingUser = await this._userRepository.findById(id)
+      const existingUsername = await this._userRepository.findByUsername(data.username)
+      if (!existingUser) {
+        return HttpResponse.response(CodesHttpEnum.notFound, null, 'Usuario no encontrado')
+      }
+      if (existingUsername && existingUsername.username === data.username && id !== existingUsername.id) {
+        return HttpResponse.response(CodesHttpEnum.badRequest, null, 'El nombre de usuario ya existe')
+      }
+
+      const existingIdCard = await this._userRepository.findByIdCard(data.idCard)
+      if (existingIdCard && existingIdCard.idCard === data.idCard && id !== existingIdCard.id) {
+        return HttpResponse.response(
+          CodesHttpEnum.badRequest,
+          'Error al actualizar usuario',
+          'Ya existe un usuario con la cédula proporcionada'
+        )
+      }
+
+      const updatedUser = await this._authRepository.updateProfile(id, data)
+
+      return HttpResponse.response(CodesHttpEnum.ok, updatedUser, 'Datos de perfil actualizados correctamente')
     } catch (error) {
       if (error instanceof ApiException) {
         return HttpResponse.response(error.statusCode, null, error.message)

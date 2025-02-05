@@ -1,7 +1,8 @@
-import { LoginAttempt, Session } from "@database/initDatabase"
+import { LoginAttempt, Session, User } from "@database/initDatabase"
 import { CodesHttpEnum } from "@enums/codesHttpEnums"
 import { JWT_SECRET, MAX_LOGIN_ATTEMPTS } from "@environment/env"
 import ApiException from "@exceptions/ApiException"
+import { UserProfileUpdateDTO, UserScopes } from "@user/user.model"
 import UserRepository from "@user/user.repository"
 import BcryptHash from "@utils/bcryptHash"
 import { sign } from "jsonwebtoken"
@@ -60,6 +61,11 @@ export default class AuthRepository {
       idUser: user.id,
       startDate: new Date()
     })
+
+    user.set({
+      sessionActive: true
+    });
+    await user.save()
     return {
       username: user.username,
       token
@@ -90,5 +96,24 @@ export default class AuthRepository {
         resolved: false
       }
     })
+  }
+
+  async findById(id: number) {
+    return User.scope(UserScopes.UserProfile).findOne({
+      where: {
+        id
+      }
+    })
+  }
+
+  async updateProfile(id: number, data: UserProfileUpdateDTO) {
+    const user = await this.findById(id)
+    if (!user) {
+      throw new ApiException("No se encontró un usuario con el id proporcionado", CodesHttpEnum.notFound)
+    }
+    user.set(data)
+    await user.save()
+    const updatedUser = await User.scope(UserScopes.UserProfile).findByPk(user.id)
+    return updatedUser
   }
 }

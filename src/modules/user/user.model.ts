@@ -17,6 +17,7 @@ export type UserAttributes = {
 }
 
 export type UserCreateDTO = Optional<UserAttributes, "id">
+export type UserProfileUpdateDTO = Omit<UserAttributes, "id" | "password" | "status" | "sessionActive" | "email">
 export type UserCreateWithRoleDTO = UserCreateDTO & {
   idRole: number
 }
@@ -40,7 +41,7 @@ export class User extends Model<UserAttributes, UserCreateDTO> {
   declare firstLastname: string;
   declare secondLastname: string;
   declare idCard: string;
-  declare birthDate: Date;
+  declare birthDate: string;
 
   static initModel(sequelize: Sequelize): typeof User {
     return sequelize.define('User', {

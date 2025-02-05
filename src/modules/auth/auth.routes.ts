@@ -1,5 +1,5 @@
 import { Router, Response, Request, NextFunction } from "express";
-import { GetProfileController, LoginController } from "./auth.controller";
+import { GetProfileController, LoginController, UpdateProfileController } from "./auth.controller";
 import { HttpResponse } from "@utils/httpResponse";
 import { CodesHttpEnum } from "@enums/codesHttpEnums";
 import { validate } from "express-validation";
@@ -32,6 +32,19 @@ routes.get('/profile',
   async (req: Request, res: Response, next: NextFunction) => {
   try {
     const response = await GetProfileController(req)
+    res.status(response.code).json(response)
+  } catch (error) {
+    if (error instanceof Error) {
+      HttpResponse.fail(res, CodesHttpEnum.internalServerError, error.message)
+    }
+  }
+})
+
+routes.put('/profile',
+  jwtMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const response = await UpdateProfileController(req)
     res.status(response.code).json(response)
   } catch (error) {
     if (error instanceof Error) {
