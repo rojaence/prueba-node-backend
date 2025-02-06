@@ -1,10 +1,11 @@
 import { CodesHttpEnum } from "../../enums/codesHttpEnums";
 import ApiException from "../../exceptions/ApiException";
-import { UserCreateDTO, UserProfileUpdateDTO, UserScopes }  from "@user/user.model"
+import { UserCreateDTO, UserPasswordUpdateDTO, UserProfileUpdateDTO }  from "@user/user.model"
 import { HttpResponse } from "../../utils/httpResponse";
 import UserRepository from "@user/user.repository";
 import AuthRepository from "@auth/auth.repository";
 import { User } from "@database/initDatabase";
+import BcryptHash from "@utils/bcryptHash";
 
 export class AuthService {
   private readonly _authRepository: AuthRepository
@@ -67,6 +68,29 @@ export class AuthService {
     } catch (error) {
       if (error instanceof ApiException) {
         return HttpResponse.response(error.statusCode, null, error.message)
+      }
+      throw new Error("Error en autenticación")
+    }
+  }
+
+  async updatePasswordService(id: number, data: UserPasswordUpdateDTO) {
+    try {
+      const existingUser = await User.findByPk(id)
+      if (!existingUser) {
+        return HttpResponse.response(CodesHttpEnum.notFound, null, 'Usuario no encontrado')
+      }
+
+      const passwordChecked = await BcryptHash.chechPasswordHash(data.currentPassword, existingUser.password)
+      if (!passwordChecked) {
+        throw new ApiException('Credenciales incorrectas', CodesHttpEnum.unauthorized)
+      }
+
+      const response = await this._authRepository.updatePassword(id, data)
+      return HttpResponse.response(CodesHttpEnum.ok, response, 'Contraseña actualizada correctamente')
+
+    } catch (error) {
+      if (error instanceof ApiException) {
+        return HttpResponse.response(error.statusCode, 'Error al intenar actualizar contraseña', error.message)
       }
       console.log(error)
       throw new Error("Error en autenticación")

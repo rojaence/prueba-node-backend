@@ -18,6 +18,11 @@ export type UserAttributes = {
 
 export type UserCreateDTO = Optional<UserAttributes, "id">
 export type UserProfileUpdateDTO = Omit<UserAttributes, "id" | "password" | "status" | "sessionActive" | "email">
+export type UserPasswordUpdateDTO = {
+  currentPassword: string,
+  newPassword: string,
+  repeatPassword: string
+}
 export type UserCreateWithRoleDTO = UserCreateDTO & {
   idRole: number
 }

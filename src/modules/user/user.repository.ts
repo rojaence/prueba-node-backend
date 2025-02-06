@@ -2,6 +2,7 @@ import { Role, User } from "@database/initDatabase";
 import { CodesHttpEnum } from "@enums/codesHttpEnums";
 import ApiException from "@exceptions/ApiException";
 import { UserCreateDTO, UserCreateWithRoleDTO, UserPutDTO, UserScopes } from "./user.model";
+import BcryptHash from "@utils/bcryptHash";
 
 export default class UserRepository {
   async findByUsername(username: string) {
@@ -41,6 +42,8 @@ export default class UserRepository {
   }
 
   async createUser(payload: UserCreateWithRoleDTO) {
+    const passwordHash = await BcryptHash.genPasswordHash(payload.password)
+    payload.password = passwordHash
     const user = await User.create(payload)
     const createdUser = User.scope(UserScopes.UserProfile).findByPk(user.id)
     return createdUser

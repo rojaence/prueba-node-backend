@@ -26,9 +26,9 @@ export const createValidation = {
         Joi.string()
         .min(10)
         .max(10)
-        .regex(/^\d+$/)
+        .regex(/^(?!.*(\d)\1{3})\d{10}$/)
         .messages({
-          "string.regex": "La identificacion debe contener solo digitos"
+          "string.regex": "La identificacion debe contener solo digitos y no puede tener 4 veces seguidas el mismo"
         }),
     idRole: 
       Joi.number()

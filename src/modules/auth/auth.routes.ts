@@ -1,9 +1,9 @@
 import { Router, Response, Request, NextFunction } from "express";
-import { GetProfileController, LoginController, UpdateProfileController } from "./auth.controller";
+import { GetProfileController, LoginController, UpdatePasswordController, UpdateProfileController } from "./auth.controller";
 import { HttpResponse } from "@utils/httpResponse";
 import { CodesHttpEnum } from "@enums/codesHttpEnums";
 import { validate } from "express-validation";
-import { loginValidation } from "./auth.validations";
+import { loginValidation, profileValidation, updatePasswordValidation } from "./auth.validations";
 import { jwtMiddleware } from "@middlewares/jwtMiddleware";
 
 const routes = Router()
@@ -40,11 +40,12 @@ routes.get('/profile',
   }
 })
 
-routes.put('/profile',
+routes.post('/update-password',
+  validate(updatePasswordValidation, { keyByField: true }, {}) as any,
   jwtMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const response = await UpdateProfileController(req)
+    const response = await UpdatePasswordController(req)
     res.status(response.code).json(response)
   } catch (error) {
     if (error instanceof Error) {
