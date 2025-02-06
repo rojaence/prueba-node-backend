@@ -82,7 +82,7 @@ export class AuthService {
 
       const passwordChecked = await BcryptHash.chechPasswordHash(data.currentPassword, existingUser.password)
       if (!passwordChecked) {
-        throw new ApiException('Credenciales incorrectas', CodesHttpEnum.unauthorized)
+        throw new ApiException('Credenciales incorrectas', CodesHttpEnum.badRequest)
       }
 
       const response = await this._authRepository.updatePassword(id, data)
@@ -90,7 +90,7 @@ export class AuthService {
 
     } catch (error) {
       if (error instanceof ApiException) {
-        return HttpResponse.response(error.statusCode, 'Error al intenar actualizar contraseña', error.message)
+        return HttpResponse.response(error.statusCode, 'Error al intentar actualizar contraseña', error.message)
       }
       console.log(error)
       throw new Error("Error en autenticación")
