@@ -7,6 +7,10 @@ export type RoleAttributes = {
 
 export type RoleCreateDTO = Optional<RoleAttributes, "id">
 
+export enum RoleScopes {
+  RoleWithPermissions = "roleWithPermissions"
+}
+
 export class Role extends Model<RoleAttributes, RoleCreateDTO> {
   declare id: number;
   declare name: string;

@@ -1,6 +1,6 @@
 import type { Sequelize } from "sequelize";
 import { User as _User, UserAttributes, UserScopes} from "@user/user.model";
-import { Role as _Role, RoleAttributes } from "@role/role.model"
+import { Role as _Role, RoleAttributes, RoleScopes } from "@role/role.model"
 import { Permission as _Permission, PermissionAttributes } from "@role/permission.model"
 import { RolePermission as _RolePermission, RolePermissionAttributes } from "@role/rolePermission.model";
 import { RoleUser as _RoleUser, RoleUserAttributes } from "@role/roleUser.model";
@@ -27,7 +27,7 @@ export function initModels(sequelize: Sequelize) {
   const Session = _Session.initModel(sequelize)
 
   // Definiendo relacion entre tablas
-  Role.belongsToMany(Permission, { through: RolePermission, foreignKey: 'idRole' })
+  Role.belongsToMany(Permission, { through: RolePermission, foreignKey: 'idRole', as: "permissions" })
   Permission.belongsToMany(Role, { through: RolePermission, foreignKey: 'idPermission' });
 
   Role.belongsToMany(User, { through: RoleUser, foreignKey: 'idRole' });
@@ -57,6 +57,17 @@ export function initModels(sequelize: Sequelize) {
         attributes: ['id', 'startDate', 'endDate'],
         limit: 1, // Limitar a la última sesión
         order: [['startDate', 'DESC']]
+      }
+    ]
+  })
+
+  Role.addScope(RoleScopes.RoleWithPermissions, {
+    include: [
+      {
+        model: Permission,
+        attributes: ['name'],
+        as: "permissions",
+        through: { attributes: [] }
       }
     ]
   })

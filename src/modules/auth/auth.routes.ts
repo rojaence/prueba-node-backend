@@ -40,6 +40,19 @@ routes.get('/profile',
   }
 })
 
+routes.put('/profile',
+  jwtMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const response = await UpdateProfileController(req)
+    res.status(response.code).json(response)
+  } catch (error) {
+    if (error instanceof Error) {
+      HttpResponse.fail(res, CodesHttpEnum.internalServerError, error.message)
+    }
+  }
+})
+
 routes.post('/update-password',
   validate(updatePasswordValidation, { keyByField: true }, {}) as any,
   jwtMiddleware,

@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import { ValidationError } from 'express-validation'
 import { jwtMiddleware } from '@middlewares/jwtMiddleware'
 import authRoutes from "@auth/auth.routes"
+import roleRoutes from "@role/role.routes"
 import cors from 'cors'
 import userRoutes from '@user/user.routes'
 import { HttpResponse } from '@utils/httpResponse'
@@ -38,6 +39,7 @@ initDBConn()
 const prefix = "/api"
 app.use(`${prefix}/auth`, authRoutes)
 app.use(`${prefix}/users`, jwtMiddleware, userRoutes)
+app.use(`${prefix}/roles`, jwtMiddleware, roleRoutes)
 
 app.use(function(err: any, req: Request, res: Response, next: NextFunction) {
 
