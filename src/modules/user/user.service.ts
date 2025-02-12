@@ -40,15 +40,6 @@ export class UserService {
       return HttpResponse.response(CodesHttpEnum.badRequest, 'Error al crear usuario', 'El usuario ya existe')
     }
 
-    const existingEmail = await this._userRepository.findByEmail(data.email)
-    if (existingEmail) {
-      return HttpResponse.response(
-        CodesHttpEnum.badRequest,
-        'Error al crear usuario',
-        'Ya existe un usuario con el email proporcionado'
-      )
-    }
-
     const existingIdCard = await this._userRepository.findByIdCard(data.idCard)
     if (existingIdCard) {
       return HttpResponse.response(

@@ -25,6 +25,7 @@ routes.post('/',
     const response = await CreateController(req)
     res.status(response.code).json(response)
   } catch (error) {
+    console.log(error)
     if (error instanceof Error) {
       HttpResponse.fail(res, CodesHttpEnum.internalServerError, error.message)
     }
