@@ -29,11 +29,15 @@ Este proyecto es un servidor backend básico construido con Node.js, Express y T
 5. Configurar una base de datos postgresql con los datos del .env
 
 ## Scripts disponibles
-npm run dev: Inicia el servidor en modo desarrollo con recarga automática
+npm run dev: Inicia el servidor en modo desarrollo con recarga automática  
 npm db:seed: Ejecuta los seeders para datos iniciales en la base de datos
 
 ## Uso
-Ejecutar
+1. Ejecutar los seeders
+```bash
+  npm run db:seed
+```
+2. Ejecutar el servidor
 ```bash
   npm run dev
 ```
