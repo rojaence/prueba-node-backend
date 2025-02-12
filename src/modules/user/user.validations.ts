@@ -37,10 +37,9 @@ export const createValidation = {
     middleName: Joi.string().required(),
     firstLastname: Joi.string().required(),
     secondLastname: Joi.string().required(),
-    email: Joi.string().email().required(),
     birthDate: Joi.string().required(),
     status: Joi.boolean().default(true),
-    sessionActive: Joi.boolean().default(false)
+    email: Joi.string()
   })
 }
 
@@ -77,8 +76,14 @@ export const putValidation = {
     middleName: Joi.string().required(),
     firstLastname: Joi.string().required(),
     secondLastname: Joi.string().required(),
-    email: Joi.string().email().required(),
     birthDate: Joi.string().required(),
-    status: Joi.boolean().required()
+    status: Joi.boolean().required(),
+    password: Joi.string().allow('')
+    .messages(
+      {
+        "string.empty": "La contraseña esta vacia"
+      }
+    ),
+    email: Joi.string()
   })
 }

@@ -27,7 +27,8 @@ export type UserCreateWithRoleDTO = UserCreateDTO & {
   idRole: number
 }
 export type UserPutDTO = Omit<UserAttributes, "id" | "password" | "updatedAt" | "createdAt" | "sessionActive"> & {
-  idRole: number
+  idRole: number,
+  password?: string
 }
 
 export enum UserScopes {
