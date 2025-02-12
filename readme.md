@@ -30,7 +30,7 @@ Este proyecto es un servidor backend básico construido con Node.js, Express y T
 
 ## Scripts disponibles
 npm run dev: Inicia el servidor en modo desarrollo con recarga automática  
-npm db:seed: Ejecuta los seeders para datos iniciales en la base de datos
+npm run db:seed: Ejecuta los seeders para datos iniciales en la base de datos
 
 ## Uso
 1. Ejecutar los seeders
