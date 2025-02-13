@@ -4,8 +4,9 @@ import { JsonWebTokenError, TokenExpiredError, verify } from 'jsonwebtoken'
 import { JWT_SECRET } from '../environment/env'
 import { HttpResponse } from '../utils/httpResponse'
 import { ITokenDecoded } from '@auth/interfaces'
+import { User } from '@database/initDatabase'
 
-export const jwtMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const userStatusMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers.authorization
     let token = authHeader && authHeader.split(' ')[1]
@@ -20,13 +21,20 @@ export const jwtMiddleware = (req: Request, res: Response, next: NextFunction) =
         .json(HttpResponse.fail(res, CodesHttpEnum.unauthorized, "Error de auth", "Se requiere autenticación"))
       return
     }
-
     const validated: ITokenDecoded = verify(token!, JWT_SECRET) as ITokenDecoded
-    const now = Math.floor(Date.now() / 1000)
-    if (validated.exp < now) {
+    const user = await User.findByPk(validated.id)
+    if (!user) {
       res
         .status(CodesHttpEnum.unauthorized)
-        .json(HttpResponse.response(CodesHttpEnum.unauthorized, "La sesión ha expirado"))
+        .json(HttpResponse.fail(res, CodesHttpEnum.unauthorized, "Error de auth", "Usuario no encontrado"))
+      return
+    }
+
+    if (!user.status) {
+      res
+        .status(CodesHttpEnum.unauthorized)
+        .json(HttpResponse.fail(res, CodesHttpEnum.unauthorized, "Error de auth", "Usted se encuentra bloqueado, comuníquese con un administrador"))
+      return
     }
     next()
   } catch (error) {
@@ -40,6 +48,5 @@ export const jwtMiddleware = (req: Request, res: Response, next: NextFunction) =
         .status(CodesHttpEnum.unauthorized)
         .json(HttpResponse.response(CodesHttpEnum.unauthorized, "Error de auth", "Autenticación no válida"))
     }
-    next(error)
   }
 }

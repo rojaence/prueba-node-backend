@@ -9,6 +9,7 @@ import roleRoutes from "@role/role.routes"
 import cors from 'cors'
 import userRoutes from '@user/user.routes'
 import { HttpResponse } from '@utils/httpResponse'
+import { userStatusMiddleware } from '@middlewares/userStatusMiddleware'
 
 const app = express()
 
@@ -38,8 +39,8 @@ initDBConn()
 
 const prefix = "/api"
 app.use(`${prefix}/auth`, authRoutes)
-app.use(`${prefix}/users`, jwtMiddleware, userRoutes)
-app.use(`${prefix}/roles`, jwtMiddleware, roleRoutes)
+app.use(`${prefix}/users`, jwtMiddleware, userStatusMiddleware, userRoutes)
+app.use(`${prefix}/roles`, jwtMiddleware, userStatusMiddleware, roleRoutes)
 
 app.use(function(err: any, req: Request, res: Response, next: NextFunction) {
 

@@ -19,6 +19,9 @@ export default class AuthRepository {
     if (!user) {
       throw new ApiException('El usuario no existe', CodesHttpEnum.notFound)
     }
+    if (!user.status) {
+      throw new ApiException('Usted se encuentra bloqueado, comuníquese con un administrador', CodesHttpEnum.unauthorized)
+    }
     const passwordChecked = await BcryptHash.chechPasswordHash(password, user.password)
 
     const loginAttempts = await this.getLoginAttempts(user.id)

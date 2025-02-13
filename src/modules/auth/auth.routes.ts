@@ -5,6 +5,7 @@ import { CodesHttpEnum } from "@enums/codesHttpEnums";
 import { validate } from "express-validation";
 import { loginValidation, profileValidation, updatePasswordValidation } from "./auth.validations";
 import { jwtMiddleware } from "@middlewares/jwtMiddleware";
+import { userStatusMiddleware } from "@middlewares/userStatusMiddleware";
 
 const routes = Router()
 
@@ -29,6 +30,7 @@ routes.post('/login',
 
 routes.get('/profile',
   jwtMiddleware,
+  userStatusMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
   try {
     const response = await GetProfileController(req)
@@ -42,6 +44,7 @@ routes.get('/profile',
 
 routes.put('/profile',
   jwtMiddleware,
+  userStatusMiddleware,
   async (req: Request, res: Response, next: NextFunction) => {
   try {
     const response = await UpdateProfileController(req)
