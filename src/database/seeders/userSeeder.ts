@@ -39,12 +39,36 @@ export async function seedUsers() {
       }
     ];
 
+    const generalUsers: UserCreateDTO[] = [
+      {
+        username: 'Rojaence1',
+        password: await BcryptHash.genPasswordHash('user1234'),
+        sessionActive: false,
+        email: 'rojaence@example.com',
+        status: true,
+        firstName: 'Ronny',
+        middleName: 'Jacinto',
+        firstLastname: 'Endara',
+        secondLastname: 'Celi',
+        idCard: '0123569871',
+        birthDate: new Date('1988-02-20'),
+      }
+    ];
+
     // Inserta los usuarios en la base de datos
     const adminUsersCreated = await User.bulkCreate(adminUsers, { validate: true });
     for (let admin of adminUsersCreated) {
       await RoleUser.create({
         idRole: adminRole!.id,
         idUser: admin.id
+      })
+    }
+
+    const generalUsersCreated = await User.bulkCreate(generalUsers, { validate: true });
+    for (let user of generalUsersCreated) {
+      await RoleUser.create({
+        idRole: userRole!.id,
+        idUser: user.id
       })
     }
   
